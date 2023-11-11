@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,12 @@ public class GridMovement : MonoBehaviour
     public Animator animator;
     public Animator healAnim;
     public SpriteRenderer spriteRenderer;
+    [Space, Header("Shooting")]
+    public GameObject rotationDirObj;
+    public GameObject bulletPrefab;
+    public float bulletSpeed;
+    public float bulletDamage;
+    public float shootingSpeed = 1;
     [Space]
     public Image healthBar;
     [Space]
@@ -38,10 +45,19 @@ public class GridMovement : MonoBehaviour
     private float slowSpeed = 0;
     private float regHealth = 0;
 
+    private float startTime;
+    private List<GameObject> createdBullets = new List<GameObject>();
+
     private void Start()
     {
         regSpeed = speed;
         regHealth = health;
+
+        for (int i = 0; i < 4; i++)
+        {
+            createdBullets.Add(Instantiate(bulletPrefab));
+            createdBullets[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -91,6 +107,35 @@ public class GridMovement : MonoBehaviour
                 healthForShield = shieldHealth;
                 isShield = true;
                 canShield = false;
+            }
+        }
+
+        Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - rotationDirObj.transform.position;
+        difference.Normalize();
+        float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 90f;
+        rotationDirObj.transform.rotation = Quaternion.Euler(0f, 0f, rotation_z);
+
+        if (startTime >= shootingSpeed)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                CheckBullet();
+            }
+        }
+        else
+            startTime += Time.deltaTime;
+    }
+
+    void CheckBullet()
+    {
+        foreach (GameObject bullet in createdBullets)
+        {
+            if (!bullet.gameObject.activeSelf)
+            {
+                bullet.gameObject.SetActive(true);
+                bullet.GetComponent<Bullet>().SetBullet(rotationDirObj.transform, bulletSpeed, bulletDamage);
+                startTime = 0;
+                break;
             }
         }
     }

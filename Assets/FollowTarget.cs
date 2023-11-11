@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FollowTarget : MonoBehaviour
 {
+    public float health = 10;
     public float speed = 5;
     public float danceSec = 3;
     public Transform target;
@@ -36,6 +37,11 @@ public class FollowTarget : MonoBehaviour
             if (!isDancing)
                 StartCoroutine(Dance());
         }
+    }
+
+    public void Damage(float dmg)
+    {
+        health -= dmg;
     }
 
     public void SetSpeed(float speed)
