@@ -49,8 +49,8 @@ public class AlyScript : MonoBehaviour
         yield return new WaitForSeconds(3);
         textParent.SetActive(false);
 
-        transform.position = manager.SpawnRandom();
-
+/*        transform.position = manager.SpawnRandom();
+*/
         isCaught = false;
     }
 

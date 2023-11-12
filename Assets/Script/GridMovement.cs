@@ -56,6 +56,7 @@ public class GridMovement : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             createdBullets.Add(Instantiate(bulletPrefab));
+            createdBullets[i].transform.parent = GameObject.FindGameObjectWithTag("Pool").transform;
             createdBullets[i].SetActive(false);
         }
     }
@@ -82,7 +83,8 @@ public class GridMovement : MonoBehaviour
             {
                 blinkObj.transform.position = transform.position;
                 blinkObj.SetTrigger("Blink");
-                transform.position += move.normalized * speed * dashForce * Time.deltaTime;
+                //GetComponent<Rigidbody2D>().position += new Vector2(move.x, move.y).normalized * speed * dashForce * Time.deltaTime;
+                GetComponent<Rigidbody2D>().AddForce(new Vector2(move.x, move.y).normalized * 200f);
             }
 
             //transform.position = new Vector3(Mathf.Clamp(transform.position.x, -9.5f, 9.5f), Mathf.Clamp(transform.position.y, -5.5f, 5f));
@@ -118,9 +120,7 @@ public class GridMovement : MonoBehaviour
         if (startTime >= shootingSpeed)
         {
             if (Input.GetMouseButtonDown(0))
-            {
                 CheckBullet();
-            }
         }
         else
             startTime += Time.deltaTime;
@@ -133,7 +133,7 @@ public class GridMovement : MonoBehaviour
             if (!bullet.gameObject.activeSelf)
             {
                 bullet.gameObject.SetActive(true);
-                bullet.GetComponent<Bullet>().SetBullet(rotationDirObj.transform, bulletSpeed, bulletDamage, 2f);
+                bullet.GetComponent<Bullet>().SetBullet(rotationDirObj.transform, bulletSpeed, bulletDamage, 3f, false) ;
                 startTime = 0;
                 break;
             }

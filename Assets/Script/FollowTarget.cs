@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FollowTarget : MonoBehaviour
 {
+    public Image healthBar;
+    [Space]
     public float health = 10;
     public float speed = 5;
     public float atkDamage = 3;
@@ -18,6 +21,7 @@ public class FollowTarget : MonoBehaviour
     private float regFlip = 0;
 
     private bool isAttacking = false;
+    private float regHealth;
 
     private void Start()
     {
@@ -25,6 +29,7 @@ public class FollowTarget : MonoBehaviour
         //spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
 
         regFlip = transform.localScale.x;
+        regHealth = health;
     }
 
     // Update is called once per frame
@@ -56,13 +61,23 @@ public class FollowTarget : MonoBehaviour
     {
         isAttacking = true;
         animator.SetTrigger("Attack");
+        target.GetComponent<GridMovement>().Damage(atkDamage);
         yield return new WaitForSeconds(atkSpeed);
         isAttacking = false;
     }
 
     public void Damage(float dmg)
     {
+        float conversion = dmg / regHealth;
+        healthBar.fillAmount -= conversion;
         health -= dmg;
+
+        if(health <= 0)
+        {
+            animator.SetTrigger("Die");
+            GetComponent<Collider2D>().enabled = false;
+            enabled = false;
+        }
     }
 
     public void SetSpeed(float speed)
