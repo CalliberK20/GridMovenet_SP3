@@ -7,10 +7,13 @@ public class BossAttacks : MonoBehaviour
 {
     public float health = 40;
     public float moveSpeed = 1f;
+    public float damage = 2f;
     public Image healthBar;
+    [Space]
+    public float searchRadius = 10;
+
     [Header("MELEE")]
     public GameObject zoneObj;
-    public float damage;
 
     [Header("Range Attack")]
     public bool isRange = false;
@@ -52,18 +55,25 @@ public class BossAttacks : MonoBehaviour
     {
         if (!beginningAttack)
         {
-            if (Vector3.Distance(transform.position, target.position) > 0.5f)
+            if(Vector3.Distance(transform.position, target.position) < searchRadius)
             {
-                transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
-                animator.SetBool("Move", true);
-                FlipOnMove();
+                if (Vector3.Distance(transform.position, target.position) > 0.5f)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+                    animator.SetBool("Move", true);
+                    FlipOnMove();
+                }
+                else
+                {
+                    animator.SetBool("Move", false);
+                }
+                if (!isCalled)
+                    StartCoroutine(Attack());
             }
             else
             {
                 animator.SetBool("Move", false);
             }
-            if(!isCalled)
-            StartCoroutine(Attack());
         }
     }
 
@@ -118,7 +128,7 @@ public class BossAttacks : MonoBehaviour
                 bullets[i].SetActive(true);
                 bullets[i].transform.position = transform.position;
                 bullets[i].transform.rotation = Quaternion.Euler(0f, 0f, rotation / 2f);
-                bullets[i].GetComponent<Bullet>().SetBullet(bullets[i].transform, speed, 2f, 6f, true);
+                bullets[i].GetComponent<Bullet>().SetBullet(bullets[i].transform, speed, damage, 6f, true);
             }
             yield return new WaitForSeconds(2f);
 
@@ -129,7 +139,7 @@ public class BossAttacks : MonoBehaviour
                 bullets[i].SetActive(true);
                 bullets[i].transform.position = transform.position;
                 bullets[i].transform.rotation = Quaternion.Euler(0f, 0f, (rotation / 2f) + 30);
-                bullets[i].GetComponent<Bullet>().SetBullet(bullets[i].transform, speed, 2f, 6f, true);
+                bullets[i].GetComponent<Bullet>().SetBullet(bullets[i].transform, speed, damage, 6f, true);
             }
         }
         else
@@ -151,5 +161,11 @@ public class BossAttacks : MonoBehaviour
     public void StartMoving()
     {
         isCalled = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, searchRadius);
     }
 }

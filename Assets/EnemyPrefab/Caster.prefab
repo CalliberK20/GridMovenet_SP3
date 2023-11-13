@@ -321,9 +321,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 40
   moveSpeed: 0.1
+  damage: 4
   healthBar: {fileID: 5984187055719333017}
   zoneObj: {fileID: 0}
-  damage: 0
   isRange: 1
   bulletprefab: {fileID: 7523075882929286953, guid: d3756d3689aca5c46b49787eb2d81920, type: 3}
   bulletCount: 8

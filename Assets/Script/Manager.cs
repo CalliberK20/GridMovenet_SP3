@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
     public static Manager Instance;
 
+    public string sceneName = "";
+    [Space]
     public GameObject pointParent;
     public GameObject winnerText;
+    public GameObject gameOverObj;
 
     [Header("Area To Spawn")]
     public float xArea;
@@ -68,6 +72,12 @@ public class Manager : MonoBehaviour
         }
     }
 
+    public void SetGameOver()
+    {
+        gameOverObj.SetActive(true);
+        StartCoroutine(ResetGame());
+    }
+
     public void FPSCount()
     {
         int fps = 0;
@@ -107,6 +117,12 @@ public class Manager : MonoBehaviour
     {
         counter = 0;
         ShowText();
+    }
+
+    private IEnumerator ResetGame()
+    {
+        yield return new WaitForSeconds(4f);
+        SceneManager.LoadScene(sceneName);
     }
 
 /*    private void OnDrawGizmos()

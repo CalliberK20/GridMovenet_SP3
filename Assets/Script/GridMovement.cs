@@ -165,7 +165,7 @@ public class GridMovement : MonoBehaviour
         }
         else
         {
-            float conversion = dmg / health;
+            float conversion = dmg / regHealth;
 
             healthBar.fillAmount -= conversion;
 
@@ -177,8 +177,12 @@ public class GridMovement : MonoBehaviour
             if(health <= 0)
             {
                 Manager.Instance.ResetCounter();
-                health = regHealth;
-                healthBar.fillAmount = 1;
+                //health = regHealth;
+                //healthBar.fillAmount = 1;
+                Manager.Instance.SetGameOver();
+                animator.SetTrigger("Die");
+                GetComponent<Collider2D>().enabled = false;
+                enabled = false;
             }
         }
 
