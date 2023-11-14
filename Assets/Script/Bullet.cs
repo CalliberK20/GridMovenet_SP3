@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
     public void SetBullet(Transform direction, float speed, float damage, float life, bool isEnemy)
     {
         StopAllCoroutines();
-        transform.position = direction.position + new Vector3(0, 0.3f);
+        transform.position = direction.position + direction.up;
         rb = GetComponent<Rigidbody2D>();
         rb.velocity = direction.up * speed;
         this.damage = damage;
@@ -50,6 +50,11 @@ public class Bullet : MonoBehaviour
                 collision.GetComponent<BossAttacks>().Damage(damage);
                 gameObject.SetActive(false);
             }
+        }
+
+        if(collision.CompareTag("Wall"))
+        {
+            gameObject.SetActive(false);
         }
     }
 }

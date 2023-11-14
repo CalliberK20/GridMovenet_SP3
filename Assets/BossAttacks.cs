@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class BossAttacks : MonoBehaviour
 {
+    public GateManager gateManager;
+    [Space]
     public float health = 40;
     public float moveSpeed = 1f;
     public float damage = 2f;
@@ -111,6 +113,7 @@ public class BossAttacks : MonoBehaviour
             animator.SetTrigger("Die");
             GetComponent<Collider2D>().enabled = false;
             StopAllCoroutines();
+            gateManager.ReceiveKey();
             enabled = false;
         }
     }
