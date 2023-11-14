@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class FollowTarget : MonoBehaviour
 {
+    public float searchRadius = 10;
+    [Space]
     public Image healthBar;
     [Space]
     public float health = 10;
@@ -35,25 +37,28 @@ public class FollowTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(transform.position, target.position) > 0.5f)
+        if(Vector3.Distance(transform.position, target.position) < searchRadius)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-            animator.SetBool("Move", true);
-            FlipOnMove();
-
-/*            if(!isDancing)
+            if (Vector3.Distance(transform.position, target.position) > 0.5f)
             {
-            }*/
-        }
-        else
-        {
-            animator.SetBool("Move", false);
+                transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+                animator.SetBool("Move", true);
+                FlipOnMove();
 
-            if (!isAttacking)
-                StartCoroutine(Attack());
-/*            Debug.Log("Hit");
-            if (!isDancing)
-                StartCoroutine(Dance());*/
+                /*            if(!isDancing)
+                            {
+                            }*/
+            }
+            else
+            {
+                animator.SetBool("Move", false);
+
+                if (!isAttacking)
+                    StartCoroutine(Attack());
+                /*            Debug.Log("Hit");
+                            if (!isDancing)
+                                StartCoroutine(Dance());*/
+            }
         }
     }
 
@@ -102,17 +107,23 @@ public class FollowTarget : MonoBehaviour
         else if (transform.position.y < target.position.y)
             animator.SetFloat("MoveY", -1);*/
     }
-/*
-    private IEnumerator Dance()
+    /*
+        private IEnumerator Dance()
+        {
+            isDancing = true;
+
+            Manager.Instance.ResetCounter();
+            speed = 1;
+
+            animator.SetTrigger("Dance");
+            yield return new WaitForSeconds(danceSec);
+
+            isDancing = false;
+        }*/
+
+    private void OnDrawGizmos()
     {
-        isDancing = true;
-
-        Manager.Instance.ResetCounter();
-        speed = 1;
-
-        animator.SetTrigger("Dance");
-        yield return new WaitForSeconds(danceSec);
-
-        isDancing = false;
-    }*/
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, searchRadius);
+    }
 }

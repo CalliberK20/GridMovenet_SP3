@@ -991,7 +991,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1, y: -2.22, z: -10}
+  m_LocalPosition: {x: -20.1, y: 42.6, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1013,7 +1013,7 @@ MonoBehaviour:
   speed: 0.5
   withBorder: 1
   center: {x: 8.16, y: 7.96}
-  border: {x: 32.23, y: 36}
+  border: {x: 281.5, y: 240.1}
 --- !u!1 &608353733
 GameObject:
   m_ObjectHideFlags: 0
@@ -12797,6 +12797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61673eb13821ddc43938d8d2754a623a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  searchRadius: 10
   healthBar: {fileID: 0}
   health: 10
   speed: 1
@@ -13647,7 +13648,7 @@ Transform:
   m_GameObject: {fileID: 1545417279}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14, y: -3.13, z: 0}
+  m_LocalPosition: {x: -20, y: 42, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -21356,6 +21357,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2498705526996609478, guid: 6fdaa82733c606042a8b9c8214bbe139, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2593563852324397921, guid: 6fdaa82733c606042a8b9c8214bbe139, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2873991436410074786, guid: 6fdaa82733c606042a8b9c8214bbe139, type: 3}
       propertyPath: target
       value: 
@@ -21547,6 +21556,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 519420032}
   - {fileID: 191062704}
   - {fileID: 938411185}
   - {fileID: 1545417281}
@@ -21554,7 +21564,6 @@ SceneRoots:
   - {fileID: 1095706500}
   - {fileID: 112381051}
   - {fileID: 1425095336}
-  - {fileID: 519420032}
   - {fileID: 817069805}
   - {fileID: 2121381645}
   - {fileID: 1725283909}
