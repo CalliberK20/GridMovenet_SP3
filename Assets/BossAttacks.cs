@@ -24,6 +24,8 @@ public class BossAttacks : MonoBehaviour
     public int bulletCount = 5;
     public float castingSpeed = 3f;
     public Transform target;
+    [Space]
+    public SpriteRenderer[] hurtSprites;
 
     //-----------PRIVATE--------------------
     private Animator animator;
@@ -32,6 +34,8 @@ public class BossAttacks : MonoBehaviour
     private bool isCalled = false;
     private List<GameObject> bullets = new List<GameObject>();
     private float regHealth;
+
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -57,7 +61,7 @@ public class BossAttacks : MonoBehaviour
     {
         if (!beginningAttack)
         {
-            if(Vector3.Distance(transform.position, target.position) < searchRadius)
+            if(Vector3.Distance(transform.position, target.position) < searchRadius && !Manager.Instance.inConversation)
             {
                 if (Vector3.Distance(transform.position, target.position) > 0.5f)
                 {
@@ -102,19 +106,43 @@ public class BossAttacks : MonoBehaviour
         yield return new WaitForSeconds(2f);
     }
 
+    private IEnumerator Hurt()
+    {
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.red;
+        }
+        yield return new WaitForSeconds(Time.deltaTime);
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.white;
+        }
+        yield return new WaitForSeconds(Time.deltaTime);
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.red;
+        }
+        yield return new WaitForSeconds(Time.deltaTime);
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.white;
+        }
+    }
+
     public void Damage(float damage)
     {
         float conversion = damage / regHealth;
         healthBar.fillAmount -= conversion;
         health -= damage;
 
+
         if(health <= 0)
         {
-            animator.SetTrigger("Die");
-            GetComponent<Collider2D>().enabled = false;
-            StopAllCoroutines();
-            gateManager.ReceiveKey();
-            enabled = false;
+            StartCoroutine(SetDisable());
+        }
+        else
+        {
+            StartCoroutine(Hurt());
         }
     }
 
@@ -158,7 +186,19 @@ public class BossAttacks : MonoBehaviour
             }
         }
 
+        audioSource.Play();
         beginningAttack = false;
+    }
+
+    private IEnumerator SetDisable()
+    {
+        animator.SetTrigger("Die");
+        GetComponent<Collider2D>().enabled = false;
+        StopAllCoroutines();
+        gateManager.ReceiveKey();
+        enabled = false;
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
     }
 
     public void StartMoving()

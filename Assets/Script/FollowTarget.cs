@@ -18,6 +18,8 @@ public class FollowTarget : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
+    public SpriteRenderer[] hurtSprites;
+
     //private bool isDancing = false;
 
     private float regFlip = 0;
@@ -25,8 +27,11 @@ public class FollowTarget : MonoBehaviour
     private bool isAttacking = false;
     private float regHealth;
 
+    private AudioSource audioSource;
+    
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         //spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
 
@@ -37,7 +42,7 @@ public class FollowTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Vector3.Distance(transform.position, target.position) < searchRadius)
+        if(Vector3.Distance(transform.position, target.position) < searchRadius && !Manager.Instance.inConversation)
         {
             if (Vector3.Distance(transform.position, target.position) > 0.5f)
             {
@@ -64,6 +69,7 @@ public class FollowTarget : MonoBehaviour
 
     private IEnumerator Attack()
     {
+        audioSource.Play();
         isAttacking = true;
         animator.SetTrigger("Attack");
         target.GetComponent<GridMovement>().Damage(atkDamage);
@@ -71,17 +77,39 @@ public class FollowTarget : MonoBehaviour
         isAttacking = false;
     }
 
+    private IEnumerator Hurt()
+    {
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.red;
+        }
+        yield return new WaitForSeconds(Time.deltaTime);
+        foreach(SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.white;
+        }
+        yield return new WaitForSeconds(Time.deltaTime);
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.red;
+        }
+        yield return new WaitForSeconds(Time.deltaTime);
+        foreach (SpriteRenderer sprite in hurtSprites)
+        {
+            sprite.color = Color.white;
+        }
+    }
+
     public void Damage(float dmg)
     {
         float conversion = dmg / regHealth;
         healthBar.fillAmount -= conversion;
         health -= dmg;
+        StartCoroutine(Hurt());
 
         if(health <= 0)
         {
-            animator.SetTrigger("Die");
-            GetComponent<Collider2D>().enabled = false;
-            enabled = false;
+            StartCoroutine(SetDisableDelay());
         }
     }
 
@@ -120,6 +148,16 @@ public class FollowTarget : MonoBehaviour
 
             isDancing = false;
         }*/
+
+    private IEnumerator SetDisableDelay()
+    {
+        animator.SetTrigger("Die");
+        GetComponent<Collider2D>().enabled = false;
+        enabled = false;
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
+    }
+
 
     private void OnDrawGizmos()
     {

@@ -47,13 +47,18 @@ public class GridMovement : MonoBehaviour
 
     private float startTime;
     private List<GameObject> createdBullets = new List<GameObject>();
+    private AudioSource audioSource;
+
+    private bool isDead = false;
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         regSpeed = speed;
         regHealth = health;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 10; i++)
         {
             createdBullets.Add(Instantiate(bulletPrefab));
             createdBullets[i].transform.parent = GameObject.FindGameObjectWithTag("Pool").transform;
@@ -64,7 +69,7 @@ public class GridMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!isStagger)
+        if (!Manager.Instance.inConversation && !isStagger)
         {
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
@@ -91,8 +96,10 @@ public class GridMovement : MonoBehaviour
 
             Flip();
         }
+        else if(Manager.Instance.inConversation)
+            animator.SetBool("Walking", false);
 
-        if(isSlow)
+        if (isSlow)
         {
             speed = slowSpeed;
         }
@@ -121,6 +128,8 @@ public class GridMovement : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
                 CheckBullet();
+            else if(Input.GetMouseButton(0))
+                CheckBullet();
         }
         else
             startTime += Time.deltaTime;
@@ -132,6 +141,7 @@ public class GridMovement : MonoBehaviour
         {
             if (!bullet.gameObject.activeSelf)
             {
+                audioSource.Play();
                 bullet.gameObject.SetActive(true);
                 bullet.GetComponent<Bullet>().SetBullet(rotationDirObj.transform, bulletSpeed, bulletDamage, 3f, false) ;
                 startTime = 0;
@@ -174,7 +184,7 @@ public class GridMovement : MonoBehaviour
             StartCoroutine(Stagger());
             Debug.Log("Damage");
 
-            if(health <= 0)
+            if(health <= 0 && !isDead)
             {
                 Manager.Instance.ResetCounter();
                 //health = regHealth;
@@ -183,6 +193,8 @@ public class GridMovement : MonoBehaviour
                 animator.SetTrigger("Die");
                 GetComponent<Collider2D>().enabled = false;
                 enabled = false;
+                Manager.Instance.PlayLosingAudio();
+                isDead = true;
             }
         }
 

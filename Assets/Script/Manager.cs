@@ -14,7 +14,9 @@ public class Manager : MonoBehaviour
     public GameObject pointParent;
     public GameObject winnerText;
     public GameObject gameOverObj;
-
+    [Space]
+    public AudioSource loseAudio;
+    public AudioSource bgAudio;
     [Header("Area To Spawn")]
     public float xArea;
     public float yArea;
@@ -30,6 +32,7 @@ public class Manager : MonoBehaviour
     [Space]
     public TextMeshProUGUI fpsText;
     public TMP_Dropdown fpsDropdown;
+    [HideInInspector] public bool inConversation = false;
 
     private void Awake()
     {
@@ -123,6 +126,12 @@ public class Manager : MonoBehaviour
     {
         yield return new WaitForSeconds(4f);
         SceneManager.LoadScene(sceneName);
+    }
+
+    public void PlayLosingAudio()
+    {
+        loseAudio.Play();
+        bgAudio.Stop();
     }
 
 /*    private void OnDrawGizmos()

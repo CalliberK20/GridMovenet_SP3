@@ -578,16 +578,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b2d1f24a79fe5f45ac04599d498db79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gateManager: {fileID: 0}
   health: 40
   moveSpeed: 1
-  healthBar: {fileID: 6878248876436485505}
-  zoneObj: {fileID: 4840512432371723864}
   damage: 2
+  healthBar: {fileID: 6878248876436485505}
+  searchRadius: 10
+  zoneObj: {fileID: 4840512432371723864}
   isRange: 0
   bulletprefab: {fileID: 0}
   bulletCount: 5
   castingSpeed: 3
   target: {fileID: 0}
+  hurtSprites:
+  - {fileID: 7329334536135153001}
+  - {fileID: 6749922395814948157}
+  - {fileID: 8930765308119827387}
 --- !u!70 &7656674565090447082
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -25,6 +25,16 @@ public class FollowCam : MonoBehaviour
         }
     }
 
+    public Transform CurrentTarget()
+    {
+        return target;
+    }
+
+    public void NewTarget(Transform target)
+    {
+        this.target = target;
+    }
+
     private void OnDrawGizmos()
     {
         if(withBorder)
