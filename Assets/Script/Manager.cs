@@ -16,7 +16,6 @@ public class Manager : MonoBehaviour
     public GameObject gameOverObj;
     [Space]
     public AudioSource loseAudio;
-    public AudioSource bgAudio;
     [Header("Area To Spawn")]
     public float xArea;
     public float yArea;
@@ -30,10 +29,10 @@ public class Manager : MonoBehaviour
     public TextMeshProUGUI counterText;
 
     [Space]
-    public TextMeshProUGUI fpsText;
-    public TMP_Dropdown fpsDropdown;
     [HideInInspector] public bool inConversation = false;
 
+    private AudioSource bgAudio;
+    
     private void Awake()
     {
         Instance = this;
@@ -42,8 +41,8 @@ public class Manager : MonoBehaviour
     private void Start()
     {
         ShowText();
-        QualitySettings.vSyncCount = 0;
-        FPSCount();
+
+        bgAudio = GameObject.FindGameObjectWithTag("bgAudio").GetComponent<AudioSource>();
     }
 
     public Vector3 SpawnRandom()
@@ -81,36 +80,6 @@ public class Manager : MonoBehaviour
         StartCoroutine(ResetGame());
     }
 
-    public void FPSCount()
-    {
-        int fps = 0;
-        switch (fpsDropdown.value)
-        {
-            case 0:
-                fps = 30;
-                break;
-            case 1:
-                fps = 60;
-                break;
-            case 2:
-                fps = 120;
-                break;
-        }
-
-        Application.targetFrameRate = fps;
-        StartCoroutine(FPS());
-    }
-    private IEnumerator FPS()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(0.5f);
-            float fps = (int)(1f / Time.deltaTime);
-
-            fpsText.text = fps.ToString();
-        }
-    }
-
     private void ShowText()
     {
         counterText.text = counter.ToString() + "/" + goalCount.ToString();
@@ -125,6 +94,7 @@ public class Manager : MonoBehaviour
     private IEnumerator ResetGame()
     {
         yield return new WaitForSeconds(4f);
+        bgAudio.Play();
         SceneManager.LoadScene(sceneName);
     }
 

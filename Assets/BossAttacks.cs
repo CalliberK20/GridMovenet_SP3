@@ -35,7 +35,7 @@ public class BossAttacks : MonoBehaviour
     private List<GameObject> bullets = new List<GameObject>();
     private float regHealth;
 
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -102,6 +102,7 @@ public class BossAttacks : MonoBehaviour
         isCalled = true;
         yield return new WaitForSeconds(castingSpeed);
         beginningAttack = true;
+        audioSource.Play();
         animator.SetTrigger("Attack");
         yield return new WaitForSeconds(2f);
     }
@@ -175,18 +176,16 @@ public class BossAttacks : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(2f);
-            Collider2D hit = Physics2D.OverlapBox(zoneObj.transform.position, zoneObj.transform.localScale, 0);
+            Collider2D hit = Physics2D.OverlapBox(zoneObj.transform.position, zoneObj.transform.localScale, 0, LayerMask.GetMask("Player"));
+            Debug.Log(hit);
             if(hit != null)
             {
                 if(hit.CompareTag("Player"))
                 {
-                    Debug.Log("HIT PLAYER");
+                    hit.GetComponent<GridMovement>().Damage(damage);
                 }
             }
         }
-
-        audioSource.Play();
         beginningAttack = false;
     }
 
