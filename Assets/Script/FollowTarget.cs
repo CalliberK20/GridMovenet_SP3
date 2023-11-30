@@ -28,7 +28,7 @@ public class FollowTarget : MonoBehaviour
     private float regHealth;
 
     private AudioSource audioSource;
-    
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -49,10 +49,6 @@ public class FollowTarget : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
                 animator.SetBool("Move", true);
                 FlipOnMove();
-
-                /*            if(!isDancing)
-                            {
-                            }*/
             }
             else
             {
@@ -60,9 +56,6 @@ public class FollowTarget : MonoBehaviour
 
                 if (!isAttacking)
                     StartCoroutine(Attack());
-                /*            Debug.Log("Hit");
-                            if (!isDancing)
-                                StartCoroutine(Dance());*/
             }
         }
     }
@@ -110,6 +103,8 @@ public class FollowTarget : MonoBehaviour
         if(health <= 0)
         {
             StartCoroutine(SetDisableDelay());
+            if (GetComponent<GiveKey>())
+                GetComponent<GiveKey>().RemoveFromChild();
         }
     }
 
@@ -130,24 +125,7 @@ public class FollowTarget : MonoBehaviour
             /*animator.SetFloat("MoveX", -1);*/
             transform.localScale = new Vector3(-regFlip, transform.localScale.y);
         }
-/*        else if (transform.position.y > target.position.y)
-            animator.SetFloat("MoveY", 1);
-        else if (transform.position.y < target.position.y)
-            animator.SetFloat("MoveY", -1);*/
     }
-    /*
-        private IEnumerator Dance()
-        {
-            isDancing = true;
-
-            Manager.Instance.ResetCounter();
-            speed = 1;
-
-            animator.SetTrigger("Dance");
-            yield return new WaitForSeconds(danceSec);
-
-            isDancing = false;
-        }*/
 
     private IEnumerator SetDisableDelay()
     {
