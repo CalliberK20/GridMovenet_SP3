@@ -20,4 +20,9 @@ public class NextLevelScene : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(sceneName);
     }
+
+    public void QutGame()
+    {
+        Application.Quit();
+    }
 }

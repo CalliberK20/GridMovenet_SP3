@@ -34,6 +34,7 @@ public class BossAttacks : MonoBehaviour
     private bool isCalled = false;
     private List<GameObject> bullets = new List<GameObject>();
     private float regHealth;
+    private bool isDead = false;
 
     public AudioSource audioSource;
 
@@ -59,28 +60,32 @@ public class BossAttacks : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!beginningAttack)
+        if(!isDead)
         {
-            if(Vector3.Distance(transform.position, target.position) < searchRadius && !Manager.Instance.inConversation)
+            if (!beginningAttack)
             {
-                if (Vector3.Distance(transform.position, target.position) > 0.5f)
+                if (Vector3.Distance(transform.position, target.position) < searchRadius && !Manager.Instance.inConversation)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
-                    animator.SetBool("Move", true);
-                    FlipOnMove();
+                    if (Vector3.Distance(transform.position, target.position) > 0.5f)
+                    {
+                        transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+                        animator.SetBool("Move", true);
+                        FlipOnMove();
+                    }
+                    else
+                    {
+                        animator.SetBool("Move", false);
+                    }
+                    if (!isCalled)
+                        StartCoroutine(Attack());
                 }
                 else
                 {
                     animator.SetBool("Move", false);
                 }
-                if (!isCalled)
-                    StartCoroutine(Attack());
-            }
-            else
-            {
-                animator.SetBool("Move", false);
             }
         }
+        
     }
 
     private void FlipOnMove()
@@ -194,10 +199,12 @@ public class BossAttacks : MonoBehaviour
         animator.SetTrigger("Die");
         GetComponent<Collider2D>().enabled = false;
         StopAllCoroutines();
+        if(gateManager != null)
         gateManager.ReceiveKey();
-        enabled = false;
+        isDead = true;
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
+        enabled = false;
     }
 
     public void StartMoving()

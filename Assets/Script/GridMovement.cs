@@ -143,6 +143,7 @@ public class GridMovement : MonoBehaviour
             {
                 audioSource.Play();
                 bullet.gameObject.SetActive(true);
+                animator.SetTrigger("Attack");
                 bullet.GetComponent<Bullet>().SetBullet(rotationDirObj.transform, bulletSpeed, bulletDamage, 3f, false) ;
                 startTime = 0;
                 break;
